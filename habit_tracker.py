@@ -1,4 +1,4 @@
-# Core Features for MVP (Minimum Viable Product)
+# Core Features for Minimum Viable Product
 # User Input – Add and remove habits.
 # Tracking – Log habit completions by date.
 # Points System – Earn points for each logged habit.
