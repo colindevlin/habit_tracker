@@ -1,16 +1,10 @@
-# 🧩 Core Features for MVP (Minimum Viable Product)
+# Core Features for MVP (Minimum Viable Product)
 # User Input – Add and remove habits.
 # Tracking – Log habit completions by date.
 # Points System – Earn points for each logged habit.
 # View Progress – Display current habits, total points, and recent activity.
-#
-# 🔧 Suggested Tech Stack for MVP
-# Language: Python
-# Interface: Command-line (to start), with plans to expand to GUI or web.
-# Data Storage: JSON or SQLite (start simple, upgrade later)
 
 import sys
-import datetime
 
 main_menu_actions =[
     "New habit",
@@ -29,6 +23,7 @@ habits = [
     }
 ]
 
+
 def view_list():
     while True:
         for habit in habits:
@@ -45,6 +40,7 @@ def view_list():
         elif view_list_select == "2":
             sys.exit()
         else: print("Invalid selection -- Try again.")
+
 
 def habit_stats():
     while True:
@@ -67,7 +63,6 @@ def habit_stats():
         print(f"{habit['frequency']}")
         print(f"{habit['is_done']}")
         print(f"{habit['habit_streak']}")
-
 
 
 def new_habit(habit_name, frequency):
@@ -98,6 +93,7 @@ def log_habit():
     print(f"You marked {habit['habit_name'].title()} as done today.")
     print(f"Your {habit['habit_name'].title()} streak is {habit['habit_streak']}!")
 
+
 functions_dict = {
     "New habit": handle_new_habit_input,
     "View list": view_list,
@@ -105,6 +101,7 @@ functions_dict = {
     "Habit stats": habit_stats,
     "Quit": sys.exit
 }
+
 
 def main_menu():
     for index, action in enumerate(main_menu_actions, start=1):
@@ -119,14 +116,10 @@ def main_menu():
         print("Invalid selection -- Try again.")
 
 
-
-
-
-
 # <----- main loop ----->
 while True:
     main_menu()
 
-
 # to do:
+# - separate functions by i/o
 # - validate values to each input and handle errors
