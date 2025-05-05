@@ -44,6 +44,7 @@ def view_list():
             break
         elif view_list_select == "2":
             sys.exit()
+        else: print("Invalid selection -- Try again.")
 
 def habit_stats():
     while True:
@@ -60,6 +61,7 @@ def habit_stats():
             break
         elif stats_selection == index + 2:
             sys.exit()
+        else: print("Invalid selection -- Try again.")
 
         print(f"{habit['habit_name']}")
         print(f"{habit['frequency']}")
@@ -67,14 +69,19 @@ def habit_stats():
         print(f"{habit['habit_streak']}")
 
 
-def new_habit():
-    habit_input = input("Add a habit to track: ")
-    frequency_input = input("How often will you do it?: ")
-    habits.append({'habit_name': habit_input.title(),
-                   'frequency': frequency_input,
+
+def new_habit(habit_name, frequency):
+    habits.append({'habit_name': habit_name.title(),
+                   'frequency': frequency,
                    'is_done': False,
                    'habit_streak': 0})
-    return habits
+
+
+def handle_new_habit_input():
+    habit_name_input = input("Add a habit to track: ")
+    frequency_input = input("How often will you do it?: ")
+    new_habit(habit_name_input, frequency_input)
+
 
 def log_habit():
     for index, habit in enumerate(habits, start=1):
@@ -84,6 +91,7 @@ def log_habit():
         habit_selected = int(habit_to_log)
         if 1 <= habit_selected <= len(habits):
             habit = habits[habit_selected - 1]
+        else: print("Invalid selection -- Try again.")
 
         habit['is_done'] = True
         habit['habit_streak'] += 1
@@ -91,7 +99,7 @@ def log_habit():
     print(f"Your {habit['habit_name'].title()} streak is {habit['habit_streak']}!")
 
 functions_dict = {
-    "New habit": new_habit,
+    "New habit": handle_new_habit_input,
     "View list": view_list,
     "Log habit": log_habit,
     "Habit stats": habit_stats,
@@ -108,7 +116,7 @@ def main_menu():
         action = main_menu_actions[main_menu_selection - 1]
         functions_dict[action]()
     else:
-        print("Invalid, try again.")
+        print("Invalid selection -- Try again.")
 
 
 
@@ -118,3 +126,7 @@ def main_menu():
 # <----- main loop ----->
 while True:
     main_menu()
+
+
+# to do:
+# - validate values to each input and handle errors
