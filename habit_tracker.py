@@ -23,7 +23,6 @@ habits = [
     }
 ]
 
-
 def view_list():
     while True:
         for habit in habits:
@@ -41,8 +40,13 @@ def view_list():
             sys.exit()
         else: print("Invalid selection -- Try again.")
 
+def habit_stats(stats):
+    print(f"{stats['habit_name']}")
+    print(f"{stats['frequency']}")
+    print(f"{stats['is_done']}")
+    print(f"{stats['habit_streak']}")
 
-def habit_stats():
+def handle_habit_stats_input():
     while True:
         for index, habit in enumerate(habits, start=1):
             print(f"{index}. {habit['habit_name']}")
@@ -59,11 +63,7 @@ def habit_stats():
             sys.exit()
         else: print("Invalid selection -- Try again.")
 
-        print(f"{habit['habit_name']}")
-        print(f"{habit['frequency']}")
-        print(f"{habit['is_done']}")
-        print(f"{habit['habit_streak']}")
-
+    habit_stats(stats)
 
 def new_habit(habit_name, frequency):
     habits.append({'habit_name': habit_name.title(),
@@ -71,37 +71,36 @@ def new_habit(habit_name, frequency):
                    'is_done': False,
                    'habit_streak': 0})
 
-
 def handle_new_habit_input():
     habit_name_input = input("Add a habit to track: ")
     frequency_input = input("How often will you do it?: ")
     new_habit(habit_name_input, frequency_input)
 
+def log_habit(habit):
+    habit['is_done'] = True
+    habit['habit_streak'] += 1
+    print(f"You marked {habit['habit_name'].title()} as done today.")
+    print(f"Your {habit['habit_name'].title()} streak is {habit['habit_streak']}!")
 
-def log_habit():
+def handle_log_habit_input():
     for index, habit in enumerate(habits, start=1):
         print(f"{index}. {habit['habit_name'].title()}")
-        habit_to_log = input("Which habit do you want to log?: ")
 
+        habit_to_log = input("Which habit do you want to log?: ")
         habit_selected = int(habit_to_log)
         if 1 <= habit_selected <= len(habits):
             habit = habits[habit_selected - 1]
         else: print("Invalid selection -- Try again.")
 
-        habit['is_done'] = True
-        habit['habit_streak'] += 1
-    print(f"You marked {habit['habit_name'].title()} as done today.")
-    print(f"Your {habit['habit_name'].title()} streak is {habit['habit_streak']}!")
-
+    log_habit(habit)
 
 functions_dict = {
     "New habit": handle_new_habit_input,
     "View list": view_list,
-    "Log habit": log_habit,
-    "Habit stats": habit_stats,
+    "Log habit": handle_log_habit_input,
+    "Habit stats": handle_habit_stats_input,
     "Quit": sys.exit
 }
-
 
 def main_menu():
     for index, action in enumerate(main_menu_actions, start=1):
