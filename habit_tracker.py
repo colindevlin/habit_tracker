@@ -10,6 +10,7 @@ main_menu_actions =[
     "New habit",
     "View list",
     "Log habit",
+    "Delete habit",
     "Habit stats",
     "Quit",
 ]
@@ -25,45 +26,55 @@ habits = [
 
 def view_list():
     while True:
-        for habit in habits:
-            print(f"-- {habit['habit_name'].title()}")
-            print(f"\tFrequency: {habit['frequency']}")
-            print(f"\tDone Today?: {habit['is_done']}")
-            print(f"\tCurrent Streak: {habit['habit_streak']}")
-        print(f"1. Return to Main Menu")
-        print(f"2. Quit")
-
-        view_list_select = input(": ")
-        if view_list_select == "1":
+        if not habits:
+            print("No habits found.")
             break
-        elif view_list_select == "2":
-            sys.exit()
-        else: print("!! Invalid, try again.")
+        else:
+            for habit in habits:
+                print(f"-- {habit['habit_name'].title()}")
+                print(f"\tFrequency: {habit['frequency'].title()}")
+                if habit['is_done'] == False:
+                    print(f"\tDone Today?: No")
+                else: print("\tDone Today?: Yes")
+                print(f"\tCurrent Streak: {habit['habit_streak']}")
+            print(f"1. Return to Main Menu")
+            print(f"2. Quit")
+
+            view_list_select = input(": ")
+            if view_list_select == "1":
+                break
+            elif view_list_select == "2":
+                sys.exit()
+            else: print("!! Invalid, try again.")
 
 def habit_stats(stats):
-    print(f"{stats['habit_name']}")
-    print(f"{stats['frequency']}")
-    print(f"{stats['is_done']}")
-    print(f"{stats['habit_streak']}")
+    print(f"-- {stats['habit_name'].title()}")
+    print(f"\tFrequency: {stats['frequency']}")
+    print(f"\tDone today?: {stats['is_done']}")
+    print(f"\tCurrent Streak: {stats['habit_streak']}")
 
 def handle_habit_stats_input():
     while True:
-        for index, habit in enumerate(habits, start=1):
-            print(f"{index}. {habit['habit_name']}")
+        if not habits:
+            print("No habits found.")
+            break
+        else:
+            for index, habit in enumerate(habits, start=1):
+                print(f"{index}. {habit['habit_name'].title()}")
             print(f"{index + 1}: Return to Main Menu")
             print(f"{index + 2}: Quit")
 
-        habit_stats_selection = input("What habit?: ")
-        stats_selection = int(habit_stats_selection)
-        if 1 <= stats_selection <= len(habits):
-            stats = habits[stats_selection - 1]
-        elif stats_selection == index + 1:
-            break
-        elif stats_selection == index + 2:
-            sys.exit()
-        else: print("!! Invalid, try again.")
+            habit_stats_selection = input("What habit stats?: ")
+            stats_selection = int(habit_stats_selection)
+            if 1 <= stats_selection <= len(habits):
+                stats = habits[stats_selection - 1]
+            elif stats_selection == index + 1:
+                break
+            elif stats_selection == index + 2:
+                sys.exit()
+            else: print("!! Invalid, try again.")
 
-    habit_stats(stats)
+            habit_stats(stats)
 
 def new_habit(habit_name, frequency):
     habits.append({'habit_name': habit_name.title(),
@@ -74,8 +85,8 @@ def new_habit(habit_name, frequency):
 def handle_new_habit_input():
     habit_name_input = input("Add a habit to track: ")
     while True:
-        frequency_input = input("Daily or Weekly habit?: ")
-        if frequency_input.casefold() not in ["daily", "weekly"]:
+        frequency_input = input("Daily or Weekly habit?: ").casefold()
+        if frequency_input not in ["daily", "weekly"]:
             print("Invalid -- we only track daily or weekly habits.")
         else:
             new_habit(habit_name_input, frequency_input)
@@ -91,18 +102,40 @@ def handle_log_habit_input():
     for index, habit in enumerate(habits, start=1):
         print(f"{index}. {habit['habit_name'].title()}")
 
-        habit_to_log = input("Which habit do you want to log?: ")
-        habit_selected = int(habit_to_log)
-        if 1 <= habit_selected <= len(habits):
-            habit = habits[habit_selected - 1]
-        else: print("!! Invalid, try again.")
+    habit_to_log = input("Which habit do you want to log?: ")
+    habit_selected = int(habit_to_log)
+    if 1 <= habit_selected <= len(habits):
+        habit = habits[habit_selected - 1]
+    else: print("!! Invalid, try again.")
 
     log_habit(habit)
+
+def delete_habit(habit_to_delete):
+    habits.remove(habit_to_delete)
+    print(f"{habit_to_delete['habit_name'].title()} deleted from your Habit List.")
+
+def handle_delete_habit_input():
+    while True:
+        for index, habit in enumerate(habits, start=1):
+            print(f"{index}. {habit['habit_name'].title()}")
+        print(f"{index + 1}. Return to Main Menu")
+        print(f"{index + 2}. Quit")
+
+        habit_to_delete = input("Select a habit to remove: ")
+        habit_selected = int(habit_to_delete)
+
+        if 1 <= habit_selected <= len(habits):
+            habit = habits[habit_selected - 1]
+            delete_habit(habit)
+            break
+        else:
+            print("!! Invalid selection, try again.")
 
 functions_dict = {
     "New habit": handle_new_habit_input,
     "View list": view_list,
     "Log habit": handle_log_habit_input,
+    "Delete habit": handle_delete_habit_input,
     "Habit stats": handle_habit_stats_input,
     "Quit": sys.exit
 }
@@ -126,4 +159,3 @@ while True:
     main_menu()
 
 # to do:
-#
