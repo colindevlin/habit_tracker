@@ -103,11 +103,23 @@ def handle_new_habit_input():
             new_habit(habit_name_input, frequency_input)
             break
 
+def handle_habit_streak(dates):
+    last_logged_date = dates[-1]
+    for habit in habits:
+        if habit['frequency'] == "weekly":
+            if last_logged_date:
+                pass
+                
+# ** start here --> trying to compare days for different freq types
+# - figure out timedelta(days=...)
+# maybe if start_date <= check_date <= end_date?
+
 def log_habit(habit, date):
     habit['is_done'] = True
     habit['habit_streak'] += 1
     habit['log_dates'].append(date)
     save_tasks_to_file()
+    handle_habit_streak(habit['log_dates'])
     print(f"You marked {habit['habit_name'].title()} as done today.")
     print(f"Your {habit['habit_name'].title()} streak is {habit['habit_streak']}!")
     print("Date Log:")
