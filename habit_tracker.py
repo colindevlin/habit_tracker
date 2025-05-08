@@ -5,6 +5,8 @@
 # View Progress – Display current habits, total points, and recent activity.
 
 import sys
+import json
+import datetime
 
 main_menu_actions =[
     "New habit",
@@ -21,6 +23,7 @@ habits = [
         'frequency': 'daily',
         'is_done': False,
         'habit_streak': 0,
+        'log_dates': [],
     }
 ]
 
@@ -37,6 +40,8 @@ def view_list():
                     print(f"\tDone Today?: No")
                 else: print("\tDone Today?: Yes")
                 print(f"\tCurrent Streak: {habit['habit_streak']}")
+                for date in habit['log_dates']:
+                    print(f"\t{date}")
             print(f"1. Return to Main Menu")
             print(f"2. Quit")
 
@@ -52,6 +57,8 @@ def habit_stats(stats):
     print(f"\tFrequency: {stats['frequency']}")
     print(f"\tDone today?: {stats['is_done']}")
     print(f"\tCurrent Streak: {stats['habit_streak']}")
+    for date in stats['log_dates']:
+        print(f"\t{date}")
 
 def handle_habit_stats_input():
     while True:
@@ -80,7 +87,11 @@ def new_habit(habit_name, frequency):
     habits.append({'habit_name': habit_name.title(),
                    'frequency': frequency,
                    'is_done': False,
-                   'habit_streak': 0})
+                   'habit_streak': 0,
+                   'log_dates': [],
+                   }
+                  )
+    save_tasks_to_file()
 
 def handle_new_habit_input():
     habit_name_input = input("Add a habit to track: ")
@@ -92,11 +103,16 @@ def handle_new_habit_input():
             new_habit(habit_name_input, frequency_input)
             break
 
-def log_habit(habit):
+def log_habit(habit, date):
     habit['is_done'] = True
     habit['habit_streak'] += 1
+    habit['log_dates'].append(date)
+    save_tasks_to_file()
     print(f"You marked {habit['habit_name'].title()} as done today.")
     print(f"Your {habit['habit_name'].title()} streak is {habit['habit_streak']}!")
+    print("Date Log:")
+    for date in habit['log_dates']:
+        print(date)
 
 def handle_log_habit_input():
     for index, habit in enumerate(habits, start=1):
@@ -106,13 +122,19 @@ def handle_log_habit_input():
     habit_selected = int(habit_to_log)
     if 1 <= habit_selected <= len(habits):
         habit = habits[habit_selected - 1]
+        date_logged = datetime.date.today()
+        date_logged_str = date_logged.isoformat()
+        if habit['log_dates'] and habit['log_dates'][-1] == date_logged.isoformat():
+            print("You already logged this today.")
+            return
     else: print("!! Invalid, try again.")
 
-    log_habit(habit)
+    log_habit(habit, date_logged_str)
 
 def delete_habit(habit_to_delete):
     habits.remove(habit_to_delete)
     print(f"{habit_to_delete['habit_name'].title()} deleted from your Habit List.")
+    save_tasks_to_file()
 
 def handle_delete_habit_input():
     while True:
@@ -140,6 +162,16 @@ functions_dict = {
     "Quit": sys.exit
 }
 
+def save_tasks_to_file(filename="habits.json"):
+    with open(filename, "w") as file:
+        json.dump(habits, file, indent=4)
+
+def load_tasks_from_file(filename="habits.json"):
+    global habits
+    with open(filename, "r") as file:
+        habits = json.load(file)
+
+
 def main_menu():
     while True:
         for index, action in enumerate(main_menu_actions, start=1):
@@ -156,6 +188,7 @@ def main_menu():
 
 # <----- main loop ----->
 while True:
+    # load_tasks_from_file()
     main_menu()
 
 # to do:
