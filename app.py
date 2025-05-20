@@ -1,10 +1,17 @@
 from flask import Flask, render_template
-from habit_tracker import main_menu_actions
 
 app = Flask(__name__)
 
 @app.route('/')
 def home_page():
+    main_menu_actions =[
+        "New habit",
+        "View list",
+        "Log habit",
+        "Delete habit",
+        "Habit stats",
+        "Quit",
+    ]
     return render_template('main_menu.html', actions=main_menu_actions)
 
 @app.route('/new')
