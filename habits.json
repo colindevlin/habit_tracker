@@ -1,0 +1,11 @@
+[
+    {
+        "habit_name": "exercise",
+        "frequency": "daily",
+        "is_done": true,
+        "habit_streak": 1,
+        "log_dates": [
+            "2025-05-14"
+        ]
+    }
+]

@@ -1,13 +1,6 @@
-# Core Features for Minimum Viable Product
-# User Input – Add and remove habits.
-# Tracking – Log habit completions by date.
-# Points System – Earn points for each logged habit.
-# View Progress – Display current habits, total points, and recent activity.
-
 import sys
 import json
 import datetime
-from flask import Flask
 
 
 main_menu_actions =[

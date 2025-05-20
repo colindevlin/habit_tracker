@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Main Menu
+{% endblock %}
+
+{% block content %}
+
+    {% for action in actions %}
+        <button type="button" class="btn btn-primary">{{ action }}</button>
+    {% endfor %}
+
+{% endblock %}
