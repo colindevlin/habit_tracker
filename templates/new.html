@@ -1,9 +1,29 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Add a new habit
+    Add a new habit
 {% endblock %}
 
 {% block content %}
 
+    <div class="container">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="new_habit_input" class="form-label">New habit</label>
+                <input type="text" class="form-control" id="new_habit_input" name="new_habit" aria-describedby="">
+                <div id="" class="form-text">Enter a new habit to track</div>
+            </div>
+            <label for="frequency">Choose a frequency:</label>
+            <select name="frequency" id="frequency" class="form-select mb-4">
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Add Habit</button>
+            <button type="submit" class="btn btn-primary">Save to Habit List</button>
+            <a href="/" class="btn btn-success">Main Menu</a>
+        </form>
+    </div>
+
 {% endblock %}
+
+

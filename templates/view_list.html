@@ -4,6 +4,16 @@
 View Habit List
 {% endblock %}
 
-{% block content %}
-
-{% endblock %}
+<div class="container">
+    {% block content %}
+        <div class="container">
+            <h4>Habits Currently Tracked:</h4>
+            {% for habit in habits %}
+            - {{ habit['habit_name'].title() }}
+            {% endfor %}
+        </div>
+        <div class="container">
+            <a href="/" class="btn btn-success mt-5">Main Menu</a>
+        </div>
+    {% endblock %}
+</div>

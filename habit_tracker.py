@@ -182,7 +182,7 @@ def main_menu():
         else: print("!! Invalid, try again.")
 
 # <----- main loop ----->
-while True:
+if __name__ == "__main__":
     # load_tasks_from_file()
     main_menu()
 
