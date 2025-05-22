@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from habit_tracker import view_list, new_habit, handle_new_habit_input, habits
 
 
@@ -19,10 +19,9 @@ def home_page():
 @app.route('/new', methods=['GET', 'POST'])
 def new_habit():
     if request.method == 'POST':
-        habit_name = request.form.get("new_habit")  # <-- This gets the user input
-        frequency = request.form.get("frequency")   # <-- From dropdown or other input
+        habit_name = request.form.get("new_habit")
+        frequency = request.form.get("frequency")
 
-        # Example: use this data to build a new habit dictionary
         new_habit = {
             "habit_name": habit_name,
             "frequency": frequency,
@@ -30,9 +29,9 @@ def new_habit():
             "habit_streak": 0,
             "log_dates": []
         }
-        habits.append(new_habit)  # ← Assuming you're still using a global list
+        habits.append(new_habit)
 
-        return redirect(url_for('view_list'))  # Redirect after form submission
+        return redirect(url_for('view_list'))
 
     return render_template('new.html')
 
@@ -44,13 +43,29 @@ def view_list():
 def log_habit():
     return render_template('log.html')
 
-@app.route('/delete')
+@app.route('/delete', methods=['GET', 'POST'])
 def delete_habit():
-    return render_template('delete.html')
+    if request.method == 'POST':
+        habit_index = int(request.form.get("habit_to_delete"))
+        habits.pop(habit_index)
 
-@app.route('/stats')
+        return redirect(url_for('view_list'))
+
+    return render_template('delete.html', habits=habits)
+
+@app.route('/stats', methods=['GET', 'POST'])
 def habit_stats():
-    return render_template('stats.html')
+    if request.method == 'POST':
+        habit_to_display_index = int(request.form.get("habit_to_display"))
+
+        for habit in habits[habit_to_display_index]:
+            habit_to_display = habit
+        return render_template('stats.html', habits=habits, habit_to_display=habit_to_display)
+# ** START HERE: keep working on the habit_stats button functionality
+    return render_template('stats.html', habits=habits)
+
+
+
 
 @app.route('/done')
 def done():

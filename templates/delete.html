@@ -5,5 +5,18 @@ Delete
 {% endblock %}
 
 {% block content %}
+        <div class="container">
+            <form method="POST">
+                <label for="habit">Choose a habit to delete:</label>
+
+                <select name="habit_to_delete" id="habit" class="form-select mb-4">
+                    {% for habit in habits %}
+                    <option value="{{ loop.index0 }}">{{ habit['habit_name'] }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-primary" type="submit">Submit</button>
+                <a href="/" class="btn btn-success">Main Menu</a>
+            </form>
+        </div>
 
 {% endblock %}
