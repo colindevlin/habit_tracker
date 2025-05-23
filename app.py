@@ -55,17 +55,21 @@ def delete_habit():
 
 @app.route('/stats', methods=['GET', 'POST'])
 def habit_stats():
+    display_labels = {
+        'habit_name': 'Habit Name',
+        'frequency': 'Frequency',
+        'is_done': 'Completed Today?',
+        'habit_streak': 'Current Streak',
+        'log_dates': 'Logged Dates'
+    }
+
     if request.method == 'POST':
         habit_to_display_index = int(request.form.get("habit_to_display"))
+        habit_to_display = habits[habit_to_display_index]
 
-        for habit in habits[habit_to_display_index]:
-            habit_to_display = habit
-        return render_template('stats.html', habits=habits, habit_to_display=habit_to_display)
-# ** START HERE: keep working on the habit_stats button functionality
+        return render_template('stats.html', habits=habits, habit_to_display=habit_to_display, labels=display_labels)
+
     return render_template('stats.html', habits=habits)
-
-
-
 
 @app.route('/done')
 def done():

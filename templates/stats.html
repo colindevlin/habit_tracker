@@ -5,17 +5,28 @@ Habit stats
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <form method="POST">
-        <label for="habit">Choose a habit:</label>
+    <div class="container">
+        <form method="POST">
+            <label for="habit">Choose a habit:</label>
 
-        <select name="habit_to_display" id="habit" class="form-select mb-4">
-            {% for habit in habits %}
-            <option value="{{ loop.index0 }}">{{ habit['habit_name'] }}</option>
+            <select name="habit_to_display" id="habit" class="form-select mb-4">
+                {% for habit in habits %}
+                <option value="{{ loop.index0 }}">{{ habit['habit_name'] }}</option>
+                {% endfor %}
+            </select>
+            <button class="btn btn-success" type="submit">Submit</button>
+            <a href="/" class="btn btn-primary">Main Menu</a>
+        </form>
+    </div>
+
+    {% if habit_to_display %}
+        <div class="container">
+            <h2>{{ habit_to_display.habit_name.title() }}</h2>
+            {% for stat in habit_to_display %}
+            <div class="container">
+                - {{ labels[stat] }}: {{ habit_to_display[stat] }}
+            </div>
             {% endfor %}
-        </select>
-        <button class="btn btn-primary" type="submit">Submit</button>
-        <a href="/" class="btn btn-success">Main Menu</a>
-    </form>
-</div>
+        </div>
+    {% endif %}
 {% endblock %}
