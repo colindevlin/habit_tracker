@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 from habit_tracker import view_list, new_habit, handle_new_habit_input, habits
-
+import datetime
 
 app = Flask(__name__)
 
@@ -8,10 +8,10 @@ app = Flask(__name__)
 def home_page():
     main_menu_actions = [
         {"label": "Add New Habit", "endpoint": "new_habit"},
-        {"label": "Log Habit", "endpoint": "log_habit"},
-        {"label": "View Habits", "endpoint": "view_list"},
-        {"label": "Delete Habit", "endpoint": "delete_habit"},
-        {"label": "View Stats", "endpoint": "habit_stats"},
+        {"label": "Log a Habit", "endpoint": "log_habit"},
+        {"label": "View Habit List", "endpoint": "view_list"},
+        {"label": "Delete a Habit", "endpoint": "delete_habit"},
+        {"label": "View Habit Stats", "endpoint": "habit_stats"},
         {"label": "Exit", "endpoint": "done"},
     ]
     return render_template('main_menu.html', actions=main_menu_actions)
@@ -39,9 +39,29 @@ def new_habit():
 def view_list():
     return render_template('view_list.html', habits=habits)
 
-@app.route('/log')
+@app.route('/log', methods=['GET', 'POST'])
 def log_habit():
-    return render_template('log.html')
+    if request.method == 'POST':
+        habit_index = int(request.form.get('habit_to_log'))
+        habit_logged = habits[habit_index]
+        date_logged = datetime.date.today()
+        date_logged_str = date_logged.isoformat()
+        if habit_logged['log_dates'] and habit_logged['log_dates'][-1] == date_logged_str:
+            error_flag = "You already logged this today."
+
+            return render_template('log.html', habits=habits, error_flag=error_flag)
+
+        else:
+            habit_index = int(request.form.get('habit_to_log'))
+            habit_logged = habits[habit_index]
+            date_logged = datetime.date.today()
+            date_logged_str = date_logged.isoformat()
+            habit_logged['is_done'] = True
+            habit_logged['habit_streak'] += 1
+            habit_logged['log_dates'].append(date_logged_str)
+
+            return render_template('log.html', habits=habits, habit_logged=habit_logged, date_logged=date_logged_str)
+    return render_template('log.html', habits=habits)
 
 @app.route('/delete', methods=['GET', 'POST'])
 def delete_habit():

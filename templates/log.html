@@ -5,5 +5,33 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container">
+        <form method="POST">
+            <label for="habit">Choose a habit: </label>
+            <select name="habit_to_log" id="habit" class="form-select mb-4">
+                {% for habit in habits %}
+                    <option value="{{ loop.index0 }}"> {{ habit['habit_name'].title() }} </option>
+                {% endfor%}
+            </select>
 
+        <button class="btn btn-success" type="submit">Submit</button>
+        <a href="/" class="btn btn-primary">Main Menu</a>
+        </form>
+    </div>
+    {% if error_flag %}
+        <div class="container">
+            <h2> {{ error_flag }} </h2>
+        </div>
+    {% endif %}
+    {% if habit_logged %}
+        <div class="container">
+            <p> You logged {{ habit_logged['habit_name'].title() }} today!</p>
+            <p> {{ habit_logged['habit_name'].title() }} Log:</p>
+            <ul>
+                {% for date in habit_logged['log_dates'] %}
+                <li> {{ date }} </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 {% endblock %}

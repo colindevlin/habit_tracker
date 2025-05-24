@@ -8,7 +8,9 @@
 
 <div class="container">
     {% for action in actions %}
-        <a href="{{ url_for(action.endpoint) }}" class="btn btn-primary">{{ action.label }}</a>
+        <div class="container m-2">
+            <a href="{{ url_for(action.endpoint) }}" class="btn btn-secondary">{{ action.label }}</a>
+        </div>
     {% endfor %}
 </div>
 
