@@ -11,7 +11,7 @@ Habit stats
 
             <select name="habit_to_display" id="habit" class="form-select mb-4">
                 {% for habit in habits %}
-                <option value="{{ loop.index0 }}">{{ habit['habit_name'] }}</option>
+                <option value="{{ loop.index0 }}">{{ habit['habit_name'] | title }}</option>
                 {% endfor %}
             </select>
             <button class="btn btn-success" type="submit">Submit</button>
@@ -22,11 +22,20 @@ Habit stats
     {% if habit_to_display %}
         <div class="container">
             <h2>{{ habit_to_display.habit_name.title() }}</h2>
-            {% for stat in habit_to_display %}
-            <div class="container">
-                - {{ labels[stat] }}: {{ habit_to_display[stat] }}
-            </div>
+            {% for stats in habit_to_display.items() %}
+                {% if stats is not iterable %}
+                    <div class="container">
+                        - {{ labels[stats] }}: {{ habit_to_display[stats] }}
+                    </div>
+                {% elif stats is iterable %}
+                    {% for dates in stats %}
+                    <li>
+                        {{ dates }}
+                    </li>
+                    {% endfor %}
+                {% endif %}
             {% endfor %}
         </div>
     {% endif %}
+
 {% endblock %}

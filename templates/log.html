@@ -28,8 +28,8 @@
             <p> You logged {{ habit_logged['habit_name'].title() }} today!</p>
             <p> {{ habit_logged['habit_name'].title() }} Log:</p>
             <ul>
-                {% for date in habit_logged['log_dates'] %}
-                <li> {{ date }} </li>
+                {% for dates_logged in habit_logged['log_dates'] %}
+                <li> {{ date_logged }} </li>
                 {% endfor %}
             </ul>
         </div>

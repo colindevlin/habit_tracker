@@ -67,9 +67,10 @@ def log_habit():
             date_logged_str = date_logged.isoformat()
             habit_logged['is_done'] = True
             habit_logged['habit_streak'] += 1
-            habit_logged['log_dates'].append(date_logged_str)
+            formatted_date = datetime.datetime.strptime(date_logged_str, "%Y-%m-%d").strftime("%B %d, %Y")
+            habit_logged['log_dates'].append(formatted_date)
 
-            return render_template('log.html', habits=habits, habit_logged=habit_logged, date_logged=date_logged_str)
+            return render_template('log.html', habits=habits, habit_logged=habit_logged, date_logged=formatted_date)
     return render_template('log.html', habits=habits)
 
 @app.route('/delete', methods=['GET', 'POST'])
@@ -84,10 +85,11 @@ def delete_habit():
 
 @app.route('/stats', methods=['GET', 'POST'])
 def habit_stats():
+    # !!! start here --> go to stats.html and fix output formatting
     display_labels = {
         'habit_name': 'Habit Name',
         'frequency': 'Frequency',
-        'is_done': 'Completed Today?',
+        'is_done': 'Completed Today',
         'habit_streak': 'Current Streak',
         'log_dates': 'Logged Dates'
     }
