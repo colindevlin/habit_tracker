@@ -1,8 +1,17 @@
 from flask import Flask, render_template, request, redirect, url_for
-from habit_tracker import view_list, new_habit, handle_new_habit_input, habits
 import datetime
 
 app = Flask(__name__)
+
+habits = [
+    {
+        'habit_name': 'exercise',
+        'frequency': 'daily',
+        'is_done': False,
+        'habit_streak': 0,
+        'log_dates': [],
+    }
+]
 
 @app.route('/')
 def home_page():
