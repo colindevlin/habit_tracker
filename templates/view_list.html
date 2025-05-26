@@ -10,7 +10,7 @@ View Habit List
             <h4>Habits Currently Tracked:</h4>
             {% for habit in habits %}
             <div class="container">
-                - {{ habit['habit_name'].title() }}
+                - {{ habit.habit_name }}
             </div>
             {% endfor %}
         </div>

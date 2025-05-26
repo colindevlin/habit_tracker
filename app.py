@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
 import datetime
+from models import Habit, session
 
 app = Flask(__name__)
 
@@ -31,14 +32,9 @@ def new_habit():
         habit_name = request.form.get("new_habit")
         frequency = request.form.get("frequency")
 
-        new_habit = {
-            "habit_name": habit_name,
-            "frequency": frequency,
-            "is_done": False,
-            "habit_streak": 0,
-            "log_dates": []
-        }
-        habits.append(new_habit)
+        new_habit = Habit(habit_name=habit_name, frequency=frequency, is_done=False, habit_streak=0)
+        session.add(new_habit)
+        session.commit()
 
         return redirect(url_for('view_list'))
 
@@ -46,7 +42,9 @@ def new_habit():
 
 @app.route('/view_list')
 def view_list():
-    return render_template('view_list.html', habits=habits)
+    habit_list = session.query('habit')
+
+    return render_template('view_list.html', habits=habit_list)
 
 @app.route('/log', methods=['GET', 'POST'])
 def log_habit():
