@@ -8,7 +8,7 @@ View Habit List
     {% block content %}
         <div class="container">
             <h4>Habits Currently Tracked:</h4>
-            {% for habit in habits %}
+            {% for habit in habit_list %}
             <div class="container">
                 - {{ habit.habit_name }}
             </div>

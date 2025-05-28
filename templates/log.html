@@ -8,9 +8,9 @@
     <div class="container">
         <form method="POST">
             <label for="habit">Choose a habit: </label>
-            <select name="habit_to_log" id="habit" class="form-select mb-4">
+            <select name="habit_id_to_log" id="habit" class="form-select mb-4">
                 {% for habit in habits %}
-                    <option value="{{ loop.index0 }}"> {{ habit['habit_name'].title() }} </option>
+                    <option value="{{ habit.id }}"> {{ habit.habit_name | capitalize }} </option>
                 {% endfor%}
             </select>
 
@@ -25,11 +25,11 @@
     {% endif %}
     {% if habit_logged %}
         <div class="container">
-            <p> You logged {{ habit_logged['habit_name'].title() }} today!</p>
-            <p> {{ habit_logged['habit_name'].title() }} Log:</p>
+            <p> You logged {{ habit_logged.habit_name | capitalize }} today!</p>
+            <p> {{ habit_logged.habit_name | capitalize }} Log:</p>
             <ul>
-                {% for dates_logged in habit_logged['log_dates'] %}
-                <li> {{ date_logged }} </li>
+                {% for log in habit_logs %}
+                <li>{{ log.date_logged }}</li>
                 {% endfor %}
             </ul>
         </div>
