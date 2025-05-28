@@ -8,15 +8,26 @@ Delete
         <div class="container">
             <form method="POST">
                 <label for="habit">Choose a habit to delete:</label>
-
-                <select name="habit_to_delete" id="habit" class="form-select mb-4">
-                    {% for habit in habits %}
-                    <option value="{{ loop.index0 }}">{{ habit['habit_name'] }}</option>
+                <select name="habit_id_to_delete" id="habit" class="form-select mb-4">
+                    {% for habit in all_habits %}
+                    <option value="{{ habit.id }}">{{ habit.habit_name }}</option>
                     {% endfor %}
                 </select>
-                <button class="btn btn-success" type="submit">Submit</button>
+                <button class="btn btn-danger" type="submit">Delete</button>
                 <a href="/" class="btn btn-primary">Main Menu</a>
             </form>
         </div>
+
+    {% if habit_to_delete %}
+        <div class="container">
+            <h2>You deleted {{ habit_to_delete }} </h2>
+        </div>
+    {% endif %}
+
+    {% if error %}
+        <div class="container">
+            <p class="text-danger">{{ error }}</p>
+        </div>
+    {% endif %}
 
 {% endblock %}

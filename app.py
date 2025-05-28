@@ -4,16 +4,6 @@ from models import Habit, HabitLog, session
 
 app = Flask(__name__)
 
-# habits = [
-#     {
-#         'habit_name': 'exercise',
-#         'frequency': 'daily',
-#         'is_done': False,
-#         'habit_streak': 0,
-#         'log_dates': [],
-#     }
-# ]
-
 @app.route('/')
 def home_page():
     main_menu_actions = [
@@ -83,17 +73,27 @@ def log_habit():
 
 @app.route('/delete', methods=['GET', 'POST'])
 def delete_habit():
-    if request.method == 'POST':
-        habit_index = int(request.form.get("habit_to_delete"))
-        habits.pop(habit_index)
+    if request.method == "GET":
+        all_habits = session.query(Habit).all()
+        return render_template('delete.html', all_habits=all_habits)
 
-        return redirect(url_for('view_list'))
+    elif request.method == 'POST':
+        habit_id = int(request.form.get("habit_id_to_delete"))
+        habit_to_delete = session.get(Habit, habit_id)
 
-    return render_template('delete.html', habits=habits)
+        if habit_to_delete:
+            session.delete(habit_to_delete)
+            session.commit()
+            return render_template('view_list.html', habit_to_delete=habit_to_delete)
+        else:
+            all_habits = session.query(Habit).all()
+            error_msg = "Habit not found."
+            return render_template('delete.html', all_habits=all_habits, error=error_msg)
+    else:
+        return render_template('delete.html')
 
 @app.route('/stats', methods=['GET', 'POST'])
 def habit_stats():
-    # !!! start here --> go to stats.html and fix output formatting
     display_labels = {
         'habit_name': 'Habit Name',
         'frequency': 'Frequency',
