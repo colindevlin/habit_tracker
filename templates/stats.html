@@ -8,33 +8,35 @@ Habit stats
     <div class="container">
         <form method="POST">
             <label for="habit">Choose a habit:</label>
-
-            <select name="habit_to_display" id="habit" class="form-select mb-4">
-                {% for habit in habits %}
-                <option value="{{ loop.index0 }}">{{ habit['habit_name'] | title }}</option>
+            <select name="habit_id_to_display" id="habit" class="form-select mb-4">
+                {% for habit in all_habits %}
+                <option value="{{ habit.id }}">{{ habit.habit_name | capitalize }}</option>
                 {% endfor %}
             </select>
-            <button class="btn btn-success" type="submit">Submit</button>
+            <button class="btn btn-success" type="submit">Show Stats</button>
             <a href="/" class="btn btn-primary">Main Menu</a>
         </form>
     </div>
 
     {% if habit_to_display %}
         <div class="container">
-            <h2>{{ habit_to_display.habit_name.title() }}</h2>
-            {% for stats in habit_to_display.items() %}
-                {% if stats is not iterable %}
-                    <div class="container">
-                        - {{ labels[stats] }}: {{ habit_to_display[stats] }}
-                    </div>
-                {% elif stats is iterable %}
-                    {% for dates in stats %}
-                    <li>
-                        {{ dates }}
-                    </li>
+            <h2>{{ habit_to_display.habit_name | capitalize }}</h2>
+            {% for attr, label in labels.items() %}
+            {% if attr == 'log_dates' %}
+            <li><strong>{{ label }}:</strong>
+                <ul>
+                    {% for log in habit_to_display.logs %}
+                    <li>{{ log.date_logged }}</li>
+                    {% else %}
+                    <li>No log entries yet.</li>
                     {% endfor %}
-                {% endif %}
+                </ul>
+            </li>
+            {% else %}
+            <li><strong>{{ label }}:</strong> {{ habit_to_display | get_attr(attr) }}</li>
+            {% endif %}
             {% endfor %}
+
         </div>
     {% endif %}
 

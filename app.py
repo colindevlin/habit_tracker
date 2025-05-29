@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash, get_flashed_messages
 import datetime
 from models import Habit, HabitLog, session
 
 app = Flask(__name__)
+app.secret_key = 'dev'
 
 @app.route('/')
 def home_page():
@@ -82,13 +83,15 @@ def delete_habit():
         habit_to_delete = session.get(Habit, habit_id)
 
         if habit_to_delete:
-            session.delete(habit_to_delete)
+            deleted_name = habit_to_delete.habit_name
+            session.delete(habit_to_delete) # need to add functionality to delete HabitLog when Habit deleted
             session.commit()
-            return render_template('view_list.html', habit_to_delete=habit_to_delete)
+            flash(f"You deleted '{deleted_name}'") # flash message not working, come back to this
+            return redirect(url_for('view_list'))
         else:
             all_habits = session.query(Habit).all()
             error_msg = "Habit not found."
-            return render_template('delete.html', all_habits=all_habits, error=error_msg)
+            return render_template('view_list.html', all_habits=all_habits, error=error_msg)
     else:
         return render_template('delete.html')
 
@@ -102,17 +105,26 @@ def habit_stats():
         'log_dates': 'Logged Dates'
     }
 
-    if request.method == 'POST':
-        habit_to_display_index = int(request.form.get("habit_to_display"))
-        habit_to_display = habits[habit_to_display_index]
+    all_habits=session.query(Habit).all()
 
-        return render_template('stats.html', habits=habits, habit_to_display=habit_to_display, labels=display_labels)
+    if request.method == "GET":
+        return render_template('stats.html', all_habits=all_habits)
 
-    return render_template('stats.html', habits=habits)
+    elif request.method == 'POST':
+        habit_id = int(request.form.get("habit_id_to_display"))
+        habit_to_display = session.get(Habit, habit_id)
+        print(habit_to_display)
+        return render_template('stats.html', habit_to_display=habit_to_display, labels=display_labels, all_habits=all_habits)
+
+    return render_template('stats.html')
 
 @app.route('/done')
 def done():
     return render_template('done.html')
+
+@app.template_filter('get_attr')
+def get_attr(obj, attr_name):
+    return getattr(obj, attr_name)
 
 if __name__ == "__main__":
     app.run()
